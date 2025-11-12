@@ -148,6 +148,30 @@ SERVICE_KNOWLEDGE = {
             "Sewage backup",
             "Gas leak from water heater"
         ],
+        'technician_info': {
+            'qualifications': [
+                "Licensed and certified plumbers",
+                "5+ years of experience",
+                "Specialized in residential and commercial plumbing",
+                "Trained in modern plumbing techniques"
+            ],
+            'skills': [
+                "Pipe installation and repair",
+                "Drain cleaning and unclogging",
+                "Water heater installation/repair",
+                "Leak detection and fixing",
+                "Bathroom and kitchen plumbing",
+                "Emergency plumbing services"
+            ],
+            'tools': [
+                "Professional pipe wrenches and cutters",
+                "Drain snakes and augers",
+                "Leak detection equipment",
+                "Pressure testing tools",
+                "Modern repair materials"
+            ],
+            'verification': "All plumbers are background-checked, verified, and insured"
+        },
         'avg_time': "1-3 hours",
         'avg_cost': "LKR 2,000 - 8,000"
     },
@@ -176,6 +200,30 @@ SERVICE_KNOWLEDGE = {
             "Hot outlets or switches",
             "Exposed wires"
         ],
+        'technician_info': {
+            'qualifications': [
+                "Licensed electricians with safety certifications",
+                "Trained in electrical codes and standards",
+                "7+ years of experience",
+                "Specialized in residential and commercial electrical work"
+            ],
+            'skills': [
+                "Wiring and rewiring",
+                "Circuit breaker installation",
+                "Outlet and switch repair",
+                "Lighting installation",
+                "Electrical panel upgrades",
+                "Safety inspections"
+            ],
+            'tools': [
+                "Multimeters and voltage testers",
+                "Wire strippers and crimpers",
+                "Circuit tracers",
+                "Insulated tools for safety",
+                "Professional grade equipment"
+            ],
+            'verification': "All electricians are licensed, certified, and carry liability insurance"
+        },
         'avg_time': "1-4 hours",
         'avg_cost': "LKR 1,500 - 10,000"
     },
@@ -203,6 +251,30 @@ SERVICE_KNOWLEDGE = {
             "Structural wood damage",
             "Safety hazards from broken furniture"
         ],
+        'technician_info': {
+            'qualifications': [
+                "Skilled carpenters with trade certifications",
+                "10+ years of woodworking experience",
+                "Expertise in custom furniture and installations",
+                "Trained in modern carpentry techniques"
+            ],
+            'skills': [
+                "Custom furniture building",
+                "Door and window installation",
+                "Cabinet making",
+                "Wood repair and restoration",
+                "Trim and molding work",
+                "Deck and pergola construction"
+            ],
+            'tools': [
+                "Professional power tools",
+                "Precision measuring equipment",
+                "Wood cutting and shaping tools",
+                "Finishing and sanding equipment",
+                "Quality hand tools"
+            ],
+            'verification': "All carpenters are experienced, background-checked, and insured"
+        },
         'avg_time': "2-6 hours",
         'avg_cost': "LKR 3,000 - 15,000"
     },
@@ -229,6 +301,30 @@ SERVICE_KNOWLEDGE = {
             "Mold growth on walls",
             "Peeling paint (health hazard)"
         ],
+        'technician_info': {
+            'qualifications': [
+                "Professional painters with 8+ years experience",
+                "Trained in color theory and application",
+                "Experts in interior and exterior painting",
+                "Certified in safe paint handling"
+            ],
+            'skills': [
+                "Wall preparation and priming",
+                "Precision painting techniques",
+                "Color consultation",
+                "Texture and decorative finishes",
+                "Wallpaper installation/removal",
+                "Exterior painting and weatherproofing"
+            ],
+            'tools': [
+                "Professional spray equipment",
+                "Quality brushes and rollers",
+                "Surface preparation tools",
+                "Scaffolding and ladders",
+                "Premium paints and primers"
+            ],
+            'verification': "All painters are experienced professionals with quality guarantees"
+        },
         'avg_time': "4-8 hours per room",
         'avg_cost': "LKR 5,000 - 25,000"
     },
@@ -256,6 +352,30 @@ SERVICE_KNOWLEDGE = {
             "Severe odors",
             "Health hazards"
         ],
+        'technician_info': {
+            'qualifications': [
+                "Trained cleaning professionals",
+                "5+ years of experience",
+                "Certified in sanitation and hygiene",
+                "Experts in eco-friendly cleaning"
+            ],
+            'skills': [
+                "Deep cleaning techniques",
+                "Carpet and upholstery cleaning",
+                "Kitchen and bathroom sanitization",
+                "Window and glass cleaning",
+                "Floor care and polishing",
+                "Odor removal and deodorizing"
+            ],
+            'tools': [
+                "Professional vacuum cleaners",
+                "Steam cleaners and sanitizers",
+                "Eco-friendly cleaning products",
+                "Specialized cleaning equipment",
+                "Safety gear and protective equipment"
+            ],
+            'verification': "All cleaning staff are background-checked, trained, and trustworthy"
+        },
         'avg_time': "2-6 hours",
         'avg_cost': "LKR 3,000 - 12,000"
     },
@@ -283,6 +403,30 @@ SERVICE_KNOWLEDGE = {
             "Strange burning smells",
             "Complete failure"
         ],
+        'technician_info': {
+            'qualifications': [
+                "Certified appliance repair technicians",
+                "Trained on all major brands",
+                "8+ years of experience",
+                "Specialized in home appliances"
+            ],
+            'skills': [
+                "Refrigerator repair and maintenance",
+                "Washing machine diagnostics",
+                "Microwave and oven repair",
+                "Dishwasher troubleshooting",
+                "AC unit servicing",
+                "Electrical component replacement"
+            ],
+            'tools': [
+                "Diagnostic equipment",
+                "Specialized repair tools",
+                "Genuine replacement parts",
+                "Testing instruments",
+                "Safety equipment"
+            ],
+            'verification': "All technicians are certified, experienced, and carry manufacturer warranties"
+        },
         'avg_time': "1-3 hours",
         'avg_cost': "LKR 2,000 - 10,000"
     },
@@ -310,6 +454,30 @@ SERVICE_KNOWLEDGE = {
             "Electrical issues",
             "Carbon monoxide detection"
         ],
+        'technician_info': {
+            'qualifications': [
+                "HVAC certified technicians",
+                "Licensed refrigeration specialists",
+                "10+ years of experience",
+                "Trained on modern HVAC systems"
+            ],
+            'skills': [
+                "AC installation and repair",
+                "Heating system maintenance",
+                "Ventilation optimization",
+                "Refrigerant handling",
+                "Thermostat installation",
+                "Energy efficiency consulting"
+            ],
+            'tools': [
+                "Refrigerant recovery equipment",
+                "Pressure gauges and manifolds",
+                "Leak detectors",
+                "Thermometers and hygrometers",
+                "Professional HVAC tools"
+            ],
+            'verification': "All HVAC technicians are licensed, EPA certified, and insured"
+        },
         'avg_time': "1-4 hours",
         'avg_cost': "LKR 3,000 - 15,000"
     },
@@ -337,6 +505,30 @@ SERVICE_KNOWLEDGE = {
             "Lost all keys",
             "Security breach"
         ],
+        'technician_info': {
+            'qualifications': [
+                "Licensed locksmiths",
+                "Security system certified",
+                "15+ years of experience",
+                "Experts in all lock types"
+            ],
+            'skills': [
+                "Lock picking and opening",
+                "Key cutting and duplication",
+                "Lock installation and repair",
+                "Smart lock programming",
+                "Safe opening and repair",
+                "Security system installation"
+            ],
+            'tools': [
+                "Professional lock picks",
+                "Key cutting machines",
+                "Lock installation tools",
+                "Electronic programming devices",
+                "Security assessment equipment"
+            ],
+            'verification': "All locksmiths are licensed, bonded, and background-checked for your security"
+        },
         'avg_time': "30 minutes - 2 hours",
         'avg_cost': "LKR 2,000 - 8,000"
     }
@@ -429,7 +621,26 @@ def get_service_info(service_type, query_lower):
     response += f"{service_info['description']}\n\n"
     
     # Check what user is asking about
-    if any(word in query_lower for word in ['cost', 'price', 'charge', 'fee', 'how much']):
+    if any(word in query_lower for word in ['technician', 'worker', 'professional', 'expert', 'who', 'qualification', 'certified', 'licensed', 'experienced']):
+        # Technician information
+        tech_info = service_info.get('technician_info', {})
+        response += "👨‍🔧 **Our Technicians:**\n\n"
+        
+        response += "**Qualifications:**\n"
+        for qual in tech_info.get('qualifications', []):
+            response += f"✓ {qual}\n"
+        
+        response += "\n**Skills & Expertise:**\n"
+        for skill in tech_info.get('skills', []):
+            response += f"• {skill}\n"
+        
+        response += "\n**Professional Tools:**\n"
+        for tool in tech_info.get('tools', []):
+            response += f"🔨 {tool}\n"
+        
+        response += f"\n🛡️ **{tech_info.get('verification', 'All technicians are verified and insured')}**"
+    
+    elif any(word in query_lower for word in ['cost', 'price', 'charge', 'fee', 'how much']):
         response += f"💰 **Average Cost:** {service_info['avg_cost']}\n"
         response += f"⏱️ **Typical Duration:** {service_info['avg_time']}\n\n"
         response += "Note: Final cost depends on the specific issue and materials needed."
