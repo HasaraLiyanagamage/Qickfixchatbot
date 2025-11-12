@@ -1,243 +1,300 @@
+"""
+QuickFix AI Chatbot Service
+Python-based chatbot with NLP capabilities for customer support
+"""
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import re
 import os
-import json
-import random
 from datetime import datetime
+import json
+import re
 
 app = Flask(__name__)
 CORS(app)
 
-# Enhanced knowledge base for QuickFix services
-KNOWLEDGE_BASE = {
-    'services': {
-        'plumbing': {
-            'keywords': ['plumb', 'pipe', 'leak', 'water', 'drain', 'toilet', 'sink', 'faucet', 'water heater'],
-            'responses': [
-                "I can help you with plumbing services. What specific issue are you facing?",
-                "Our plumbing experts handle leaks, pipe repairs, drainage issues, and installations. What's the problem?",
-                "For plumbing emergencies, we provide 24/7 service. Please describe your issue."
-            ]
-        },
-        'electrical': {
-            'keywords': ['electr', 'electric', 'power', 'outlet', 'switch', 'wire', 'circuit', 'breaker', 'light'],
-            'responses': [
-                "I can connect you with certified electricians. What electrical issue are you experiencing?",
-                "Our electrical services cover repairs, installations, and emergency power issues. How can I help?",
-                "Electrical problems can be urgent. Our technicians are available 24/7. What's wrong?"
-            ]
-        },
-        'handyman': {
-            'keywords': ['fix', 'repair', 'install', 'mount', 'assemble', 'hang', 'paint', 'door', 'window'],
-            'responses': [
-                "Our handyman services cover a wide range of home repairs and installations. What needs fixing?",
-                "From furniture assembly to minor repairs, our handymen can help. What service do you need?",
-                "We handle various home improvement tasks. Please describe what you need done."
-            ]
-        },
-        'appliance': {
-            'keywords': ['appliance', 'fridge', 'washer', 'dryer', 'oven', 'microwave', 'dishwasher', 'repair'],
-            'responses': [
-                "We repair major home appliances. Which appliance is having issues?",
-                "Our technicians service refrigerators, washers, dryers, and other appliances. What's the problem?",
-                "Appliance repairs are our specialty. Please specify which appliance needs attention."
-            ]
-        }
+# Chatbot Configuration
+CHATBOT_CONFIG = {
+    'name': 'QuickFix Assistant',
+    'version': '1.0.0',
+    'languages': ['en', 'si', 'ta']
+}
+
+# Service Types
+SERVICE_TYPES = [
+    'plumbing', 'electrical', 'carpentry', 'painting', 
+    'cleaning', 'appliance_repair', 'hvac', 'locksmith'
+]
+
+# Intent Patterns
+INTENT_PATTERNS = {
+    'greeting': [
+        r'\b(hi|hello|hey|good morning|good afternoon|good evening)\b',
+        r'\bහායි\b', r'\bහෙලෝ\b',  # Sinhala
+        r'\bவணக்கம்\b'  # Tamil
+    ],
+    'emergency': [
+        r'\b(emergency|urgent|asap|immediately|quick|fast|help)\b',
+        r'\b(leak|flooding|fire|shock|broken|not working)\b',
+        r'\bදැන්ම\b', r'\bඉක්මනින්\b',  # Sinhala
+        r'\bஉடனடி\b'  # Tamil
+    ],
+    'booking': [
+        r'\b(book|schedule|appointment|need|want|looking for)\b',
+        r'\b(technician|plumber|electrician|carpenter)\b',
+        r'\bබුකින්\b', r'\bතාක්ෂණික\b',  # Sinhala
+        r'\bபதிவு\b'  # Tamil
+    ],
+    'pricing': [
+        r'\b(cost|price|charge|fee|how much|rate)\b',
+        r'\bවිය\b', r'\bගාස්තුව\b',  # Sinhala
+        r'\bவிலை\b'  # Tamil
+    ],
+    'status': [
+        r'\b(status|where|location|track|eta|arriving)\b',
+        r'\bස්ථානය\b',  # Sinhala
+        r'\bநிலை\b'  # Tamil
+    ],
+    'cancel': [
+        r'\b(cancel|stop|abort|don\'t want)\b',
+        r'\bඅවලංගු\b',  # Sinhala
+        r'\bரத்து\b'  # Tamil
+    ],
+    'complaint': [
+        r'\b(complaint|issue|problem|not satisfied|bad|poor)\b',
+        r'\bගැටලුව\b',  # Sinhala
+        r'\bபிரச்சினை\b'  # Tamil
+    ],
+    'thanks': [
+        r'\b(thank|thanks|appreciate)\b',
+        r'\bස්තූතියි\b',  # Sinhala
+        r'\bநன்றி\b'  # Tamil
+    ]
+}
+
+# Response Templates
+RESPONSES = {
+    'greeting': {
+        'en': "Hello! I'm QuickFix Assistant. How can I help you today? 😊\n\nI can help you with:\n• Booking a service\n• Emergency repairs\n• Checking prices\n• Tracking your technician\n• Answering questions",
+        'si': "ආයුබෝවන්! මම QuickFix සහායකයා. මට ඔබට අද උදව් කළ හැක්කේ කෙසේද? 😊",
+        'ta': "வணக்கம்! நான் QuickFix உதவியாளர். இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்? 😊"
+    },
+    'emergency': {
+        'en': "🚨 I understand this is urgent! Let me help you immediately.\n\nWhat type of emergency service do you need?\n• Plumbing (water leak, pipe burst)\n• Electrical (power failure, short circuit)\n• Locksmith (locked out)\n• Other\n\nPlease share your location so I can find the nearest technician.",
+        'si': "🚨 මට තේරෙනවා මේක හදිසියි! මම ඔබට වහාම උදව් කරන්නම්.",
+        'ta': "🚨 இது அவசரம் என்று எனக்குப் புரிகிறது! நான் உடனடியாக உங்களுக்கு உதவுகிறேன்."
+    },
+    'booking': {
+        'en': "I'll help you book a service! 📅\n\nWhich service do you need?\n1. Plumbing\n2. Electrical\n3. Carpentry\n4. Painting\n5. Cleaning\n6. Appliance Repair\n7. HVAC\n8. Locksmith\n\nPlease select a number or tell me what you need.",
+        'si': "මම ඔබට සේවාවක් වෙන්කරවා ගැනීමට උදව් කරන්නම්! 📅",
+        'ta': "நான் உங்களுக்கு சேவையை பதிவு செய்ய உதவுகிறேன்! 📅"
+    },
+    'pricing': {
+        'en': "💰 Our pricing is transparent and fair:\n\n• Base Service Fee: LKR 500-1000\n• Hourly Rate: LKR 1000-2000/hour\n• Emergency Service: +50% surcharge\n• Materials: Actual cost\n\nFinal cost depends on:\n✓ Service type\n✓ Time required\n✓ Materials needed\n✓ Distance traveled\n\nYou'll get an estimate before confirming the booking!",
+        'si': "💰 අපගේ මිල ගණන් විනිවිද පෙනෙන සහ සාධාරණ වේ:",
+        'ta': "💰 எங்கள் விலை வெளிப்படையானது மற்றும் நியாயமானது:"
+    },
+    'status': {
+        'en': "To check your booking status, please provide:\n• Your booking ID, or\n• Your registered phone number\n\nYou can also track your technician in real-time from the 'My Bookings' section in the app.",
+        'si': "ඔබගේ වෙන්කරවා ගැනීමේ තත්ත්වය පරීක්ෂා කිරීමට, කරුණාකර සපයන්න:",
+        'ta': "உங்கள் பதிவு நிலையை சரிபார்க்க, தயவுசெய்து வழங்கவும்:"
+    },
+    'cancel': {
+        'en': "I can help you cancel your booking. Please note:\n\n⚠️ Cancellation Policy:\n• Free cancellation: Before technician accepts\n• 50% charge: After acceptance, before arrival\n• Full charge: After technician arrives\n\nPlease provide your booking ID to proceed with cancellation.",
+        'si': "මට ඔබගේ වෙන්කරවා ගැනීම අවලංගු කිරීමට උදව් කළ හැකිය.",
+        'ta': "உங்கள் பதிவை ரத்து செய்ய நான் உதவ முடியும்."
+    },
+    'complaint': {
+        'en': "I'm sorry to hear you're having an issue. 😔\n\nPlease tell me more about the problem:\n• What went wrong?\n• Booking ID (if applicable)\n• What would you like us to do?\n\nYour feedback helps us improve. A support team member will contact you within 24 hours.",
+        'si': "ඔබට ගැටලුවක් ඇති බව දැනගැනීමට කණගාටුයි. 😔",
+        'ta': "உங்களுக்கு சிக்கல் இருப்பதைக் கேட்டு வருந்துகிறேன். 😔"
+    },
+    'thanks': {
+        'en': "You're welcome! 😊 Is there anything else I can help you with?\n\nIf you need immediate assistance, just ask!\nFor urgent repairs, say 'emergency'.",
+        'si': "ඔබට සාදරයෙන් පිළිගනිමු! 😊",
+        'ta': "நல்வரவு! 😊"
+    },
+    'default': {
+        'en': "I'm here to help! I can assist you with:\n\n📱 Booking a service\n🚨 Emergency repairs\n💰 Pricing information\n📍 Tracking your technician\n❓ General questions\n\nWhat would you like to know?",
+        'si': "මම උදව් කිරීමට මෙහි සිටිමි!",
+        'ta': "நான் உதவ இங்கே இருக்கிறேன்!"
     }
 }
 
-# Conversation context tracking
-conversation_context = {}
+# FAQ Database
+FAQ_DATABASE = {
+    'how to book': {
+        'en': "To book a service:\n1. Tap 'Request Service' button\n2. Select service type\n3. Choose location\n4. Select urgency level\n5. Confirm booking\n\nA nearby technician will be matched automatically!",
+        'si': "සේවාවක් වෙන්කරවා ගැනීමට:\n1. 'සේවාව ඉල්ලන්න' බොත්තම තට්ටු කරන්න",
+        'ta': "சேவையை பதிவு செய்ய:\n1. 'சேவை கோரிக்கை' பொத்தானை அழுத்தவும்"
+    },
+    'payment methods': {
+        'en': "We accept:\n💳 Credit/Debit Cards\n💵 Cash on completion\n📱 Mobile wallets\n🏦 Bank transfer\n\nPayment is due after service completion.",
+        'si': "අපි පිළිගන්නවා:\n💳 ක්‍රෙඩිට්/ඩෙබිට් කාඩ්පත්",
+        'ta': "நாங்கள் ஏற்றுக்கொள்கிறோம்:\n💳 கிரெடிட்/டெபிட் கார்டுகள்"
+    },
+    'service areas': {
+        'en': "We currently serve:\n📍 Colombo and suburbs\n📍 Gampaha\n📍 Kandy\n📍 Galle\n\nExpanding to more areas soon!",
+        'si': "අපි දැනට සේවය කරන්නේ:\n📍 කොළඹ සහ තදාසන්න ප්‍රදේශ",
+        'ta': "நாங்கள் தற்போது சேவை செய்கிறோம்:\n📍 கொழும்பு மற்றும் புறநகர்"
+    },
+    'working hours': {
+        'en': "🕐 Service Hours:\n• Regular: 8 AM - 8 PM\n• Emergency: 24/7 available\n\nEmergency services may have additional charges.",
+        'si': "🕐 සේවා වේලාවන්:\n• සාමාන්‍ය: පෙ.ව. 8 - ප.ව. 8",
+        'ta': "🕐 சேவை நேரம்:\n• வழக்கமான: காலை 8 - மாலை 8"
+    }
+}
 
-def detect_service_type(message):
-    """Enhanced service type detection using keyword matching"""
+def detect_intent(message):
+    """Detect user intent from message"""
     message_lower = message.lower()
+    
+    for intent, patterns in INTENT_PATTERNS.items():
+        for pattern in patterns:
+            if re.search(pattern, message_lower, re.IGNORECASE):
+                return intent
+    
+    return 'default'
 
-    for service, data in KNOWLEDGE_BASE['services'].items():
-        for keyword in data['keywords']:
-            if keyword in message_lower:
-                return service
+def detect_language(message):
+    """Detect message language (simple heuristic)"""
+    # Check for Sinhala Unicode range
+    if any('\u0D80' <= char <= '\u0DFF' for char in message):
+        return 'si'
+    # Check for Tamil Unicode range
+    if any('\u0B80' <= char <= '\u0BFF' for char in message):
+        return 'ta'
+    return 'en'
 
+def extract_service_type(message):
+    """Extract service type from message"""
+    message_lower = message.lower()
+    
+    for service in SERVICE_TYPES:
+        if service in message_lower or service.replace('_', ' ') in message_lower:
+            return service
+    
+    # Check for common variations
+    service_keywords = {
+        'plumbing': ['plumber', 'pipe', 'water', 'leak', 'tap', 'sink', 'toilet'],
+        'electrical': ['electrician', 'power', 'electricity', 'wiring', 'socket', 'light'],
+        'carpentry': ['carpenter', 'wood', 'furniture', 'door', 'window'],
+        'painting': ['painter', 'paint', 'wall', 'color'],
+        'cleaning': ['clean', 'maid', 'housekeeping'],
+        'appliance_repair': ['appliance', 'fridge', 'washing machine', 'ac', 'microwave'],
+        'hvac': ['ac', 'air conditioning', 'heating', 'cooling'],
+        'locksmith': ['lock', 'key', 'locked out', 'door lock']
+    }
+    
+    for service, keywords in service_keywords.items():
+        if any(keyword in message_lower for keyword in keywords):
+            return service
+    
     return None
 
-def get_service_response(service_type, message):
-    """Generate contextual response based on service type"""
-    if service_type in KNOWLEDGE_BASE['services']:
-        responses = KNOWLEDGE_BASE['services'][service_type]['responses']
-        return random.choice(responses)
+def get_response(intent, language='en', context=None):
+    """Get appropriate response based on intent and language"""
+    if intent in RESPONSES:
+        return RESPONSES[intent].get(language, RESPONSES[intent]['en'])
+    return RESPONSES['default'].get(language, RESPONSES['default']['en'])
 
-    return "I can help you find the right technician for your needs. What type of service do you require?"
+def search_faq(query):
+    """Search FAQ database"""
+    query_lower = query.lower()
+    
+    for question, answers in FAQ_DATABASE.items():
+        if any(word in query_lower for word in question.split()):
+            return answers.get('en', '')
+    
+    return None
 
-def extract_booking_info(message):
-    """Extract potential booking information from message"""
-    info = {
-        'urgency': None,
-        'location': None,
-        'contact_time': None,
-        'budget': None
-    }
-
-    # Detect urgency
-    urgent_keywords = ['urgent', 'emergency', 'asap', 'immediately', 'quick', 'fast', 'now']
-    if any(word in message.lower() for word in urgent_keywords):
-        info['urgency'] = 'high'
-
-    # Extract time preferences
-    time_patterns = [
-        r'(\d{1,2}:\d{2}\s*(am|pm))',
-        r'(morning|afternoon|evening|night)',
-        r'(today|tomorrow|tonight)'
-    ]
-
-    for pattern in time_patterns:
-        match = re.search(pattern, message, re.IGNORECASE)
-        if match:
-            info['contact_time'] = match.group(1) or match.group(0)
-            break
-
-    return info
-
-def handle_message(text):
-    """Enhanced message handling with context awareness"""
-    user_id = "default_user"  # In production, this should come from authentication
-    message_lower = text.lower().strip()
-
-    # Initialize context if not exists
-    if user_id not in conversation_context:
-        conversation_context[user_id] = {
-            'last_service': None,
-            'booking_stage': None,
-            'extracted_info': {}
-        }
-
-    context = conversation_context[user_id]
-
-    # Greeting detection
-    if re.search(r'\b(hi|hello|hey|greetings|good\s+(morning|afternoon|evening))\b', message_lower):
-        return {
-            "reply": "Hello! I'm QuickFix Assistant 🤖. I can help you book emergency home repairs, track technicians, or answer questions about our services. What do you need help with?",
-            "context": "greeting"
-        }
-
-    # Service booking requests
-    if re.search(r'\b(book|schedule|request|need|want|help|fix|repair)\b', message_lower):
-        service_type = detect_service_type(text)
-
-        if service_type:
-            context['last_service'] = service_type
-            context['booking_stage'] = 'service_selected'
-
-            response = get_service_response(service_type, text)
-            info = extract_booking_info(text)
-
-            if info['urgency']:
-                response += " I see this is urgent - I'll prioritize finding available technicians."
-
-            return {
-                "reply": response + " Please provide your address and describe the issue in detail.",
-                "context": "booking_started",
-                "service": service_type,
-                "info": info
-            }
-        else:
-            return {
-                "reply": "I can help you with plumbing, electrical work, handyman services, or appliance repairs. Which service do you need?",
-                "context": "service_selection"
-            }
-
-    # Location and address queries
-    if re.search(r'\b(address|location|where|area|street|city)\b', message_lower) or context.get('booking_stage') == 'service_selected':
-        context['booking_stage'] = 'location_provided'
-        return {
-            "reply": "Thank you for providing your location. Our smart matching system will find the nearest available technician. Please describe the specific issue you're facing.",
-            "context": "location_received"
-        }
-
-    # Tracking requests
-    if re.search(r'\b(track|where|status|progress|arriv|eta|when)\b', message_lower):
-        return {
-            "reply": "To track your booking, please provide your booking ID or the phone number used for the request. You can also view live tracking from your booking details in the app.",
-            "context": "tracking"
-        }
-
-    # Pricing inquiries
-    if re.search(r'\b(price|cost|fee|charge|rate|expensive|budget|afford)\b', message_lower):
-        return {
-            "reply": "Our pricing depends on the service type, complexity, and your location. Emergency services start from LKR 1,500. For accurate quotes, please describe your specific needs and location. We also offer transparent pricing with no hidden fees.",
-            "context": "pricing"
-        }
-
-    # Technical support
-    if re.search(r'\b(problem|issue|error|bug|not\s+work|broken|fail)\b', message_lower):
-        return {
-            "reply": "I'm sorry you're experiencing issues. Could you please describe the problem in more detail? You can also contact our support team directly at support@quickfix.lk or call +94 XX XXX XXXX.",
-            "context": "support"
-        }
-
-    # Cancellation requests
-    if re.search(r'\b(cancel|stop|terminate|end)\b', message_lower):
-        return {
-            "reply": "To cancel a booking, please provide your booking ID or contact details. You can also cancel directly through the app. Cancellations within 1 hour of booking are free.",
-            "context": "cancellation"
-        }
-
-    # Help and information
-    if re.search(r'\b(help|info|information|how|what|guide)\b', message_lower):
-        return {
-            "reply": "I can help you with: \n• Booking emergency repairs (plumbing, electrical, handyman, appliances)\n• Tracking technician location in real-time\n• Getting price estimates\n• Canceling or modifying bookings\n• General support and questions\n\nWhat would you like to know more about?",
-            "context": "help"
-        }
-
-    # Default response with context awareness
-    if context.get('last_service'):
-        return {
-            "reply": f"I see you're interested in {context['last_service']} services. How can I help you with that? Please provide more details about your needs.",
-            "context": "service_context"
-        }
-
-    return {
-        "reply": "I'm here to help with your home repair needs! You can say things like:\n• 'I need a plumber for a leaky pipe'\n• 'Track my booking'\n• 'How much does electrical repair cost?'\n• 'Help me book a handyman'\n\nWhat can I assist you with?",
-        "context": "default"
-    }
-
-# Chat route
-@app.route('/chat', methods=['POST'])
-def chat():
-    data = request.json or {}
-    message = data.get('message', '')
-    user_id = data.get('user_id', 'default_user')
-
-    if not message:
-        return jsonify({"error": "no message"}), 400
-
-    resp = handle_message(message)
-
-    # Store conversation context
-    if user_id not in conversation_context:
-        conversation_context[user_id] = {}
-    conversation_context[user_id]['last_interaction'] = datetime.now().isoformat()
-
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint"""
     return jsonify({
-        "reply": resp['reply'],
-        "context": resp.get('context', 'unknown'),
-        "timestamp": datetime.now().isoformat()
+        'status': 'healthy',
+        'service': 'QuickFix Chatbot',
+        'version': CHATBOT_CONFIG['version'],
+        'timestamp': datetime.now().isoformat()
     })
 
-# Health route
-@app.route('/', methods=['GET'])
-def health():
-    return jsonify({"status": "ok", "message": "QuickFix Enhanced Chatbot is running"})
+@app.route('/chat', methods=['POST'])
+def chat():
+    """Main chat endpoint"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'message' not in data:
+            return jsonify({
+                'error': 'Message is required'
+            }), 400
+        
+        user_message = data['message']
+        user_id = data.get('userId', 'anonymous')
+        session_id = data.get('sessionId', 'default')
+        
+        # Detect language and intent
+        language = detect_language(user_message)
+        intent = detect_intent(user_message)
+        
+        # Extract entities
+        service_type = extract_service_type(user_message)
+        
+        # Check FAQ first
+        faq_response = search_faq(user_message)
+        
+        # Generate response
+        if faq_response:
+            bot_response = faq_response
+        else:
+            bot_response = get_response(intent, language)
+        
+        # Build response
+        response_data = {
+            'message': bot_response,
+            'intent': intent,
+            'language': language,
+            'timestamp': datetime.now().isoformat(),
+            'sessionId': session_id
+        }
+        
+        # Add extracted entities
+        if service_type:
+            response_data['serviceType'] = service_type
+            response_data['suggestedAction'] = 'book_service'
+        
+        if intent == 'emergency':
+            response_data['priority'] = 'high'
+            response_data['suggestedAction'] = 'emergency_booking'
+        
+        # Log conversation (in production, save to database)
+        print(f"[{datetime.now()}] User {user_id}: {user_message}")
+        print(f"[{datetime.now()}] Bot: {bot_response}")
+        
+        return jsonify(response_data)
+        
+    except Exception as e:
+        print(f"Error in chat endpoint: {str(e)}")
+        return jsonify({
+            'error': 'Internal server error',
+            'message': 'Sorry, I encountered an error. Please try again.'
+        }), 500
 
-# Analytics route (for admin)
-@app.route('/analytics', methods=['GET'])
-def analytics():
+@app.route('/intents', methods=['GET'])
+def get_intents():
+    """Get available intents"""
     return jsonify({
-        "total_conversations": len(conversation_context),
-        "services_requested": {k: 0 for k in KNOWLEDGE_BASE['services'].keys()},
-        "uptime": "24/7"
+        'intents': list(INTENT_PATTERNS.keys()),
+        'languages': CHATBOT_CONFIG['languages']
+    })
+
+@app.route('/faq', methods=['GET'])
+def get_faq():
+    """Get FAQ database"""
+    return jsonify({
+        'faqs': FAQ_DATABASE
     })
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5005))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
