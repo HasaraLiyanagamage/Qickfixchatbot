@@ -121,6 +121,227 @@ RESPONSES = {
     }
 }
 
+# Service-Specific Knowledge Base
+SERVICE_KNOWLEDGE = {
+    'plumbing': {
+        'description': "Professional plumbing services for all your water and drainage needs.",
+        'common_issues': [
+            "Leaking taps/faucets",
+            "Clogged drains and toilets",
+            "Pipe bursts and leaks",
+            "Water heater problems",
+            "Low water pressure",
+            "Running toilets",
+            "Dripping pipes",
+            "Sewer line issues"
+        ],
+        'tips': [
+            "Turn off main water valve in case of major leaks",
+            "Don't pour grease down drains",
+            "Regular maintenance prevents major issues",
+            "Use drain strainers to prevent clogs"
+        ],
+        'emergency_signs': [
+            "Water flooding",
+            "Burst pipes",
+            "No water supply",
+            "Sewage backup",
+            "Gas leak from water heater"
+        ],
+        'avg_time': "1-3 hours",
+        'avg_cost': "LKR 2,000 - 8,000"
+    },
+    'electrical': {
+        'description': "Licensed electricians for safe and reliable electrical work.",
+        'common_issues': [
+            "Power outages",
+            "Circuit breaker trips",
+            "Faulty outlets/switches",
+            "Flickering lights",
+            "Electrical shocks",
+            "Wiring problems",
+            "Panel upgrades",
+            "Ceiling fan installation"
+        ],
+        'tips': [
+            "Never touch electrical panels when wet",
+            "Turn off breaker before replacing bulbs",
+            "Don't overload outlets",
+            "Regular electrical inspections recommended"
+        ],
+        'emergency_signs': [
+            "Burning smell from outlets",
+            "Sparks or smoke",
+            "Frequent breaker trips",
+            "Hot outlets or switches",
+            "Exposed wires"
+        ],
+        'avg_time': "1-4 hours",
+        'avg_cost': "LKR 1,500 - 10,000"
+    },
+    'carpentry': {
+        'description': "Skilled carpenters for furniture, doors, and woodwork.",
+        'common_issues': [
+            "Door repairs and installation",
+            "Window frame repairs",
+            "Custom furniture",
+            "Cabinet installation",
+            "Deck building",
+            "Wood rot repair",
+            "Trim and molding",
+            "Shelving installation"
+        ],
+        'tips': [
+            "Use quality wood for durability",
+            "Regular polishing maintains finish",
+            "Fix squeaky doors with WD-40",
+            "Protect wood from moisture"
+        ],
+        'emergency_signs': [
+            "Broken door locks",
+            "Damaged door frames",
+            "Structural wood damage",
+            "Safety hazards from broken furniture"
+        ],
+        'avg_time': "2-6 hours",
+        'avg_cost': "LKR 3,000 - 15,000"
+    },
+    'painting': {
+        'description': "Professional painters for interior and exterior work.",
+        'common_issues': [
+            "Wall painting",
+            "Ceiling painting",
+            "Exterior painting",
+            "Wood staining",
+            "Wallpaper removal",
+            "Texture painting",
+            "Color consultation",
+            "Touch-up work"
+        ],
+        'tips': [
+            "Prep walls before painting",
+            "Use primer for better coverage",
+            "Choose quality paint for longevity",
+            "Protect floors and furniture"
+        ],
+        'emergency_signs': [
+            "Water damage stains",
+            "Mold growth on walls",
+            "Peeling paint (health hazard)"
+        ],
+        'avg_time': "4-8 hours per room",
+        'avg_cost': "LKR 5,000 - 25,000"
+    },
+    'cleaning': {
+        'description': "Professional cleaning services for homes and offices.",
+        'common_issues': [
+            "Deep cleaning",
+            "Regular maintenance",
+            "Move-in/move-out cleaning",
+            "Carpet cleaning",
+            "Window cleaning",
+            "Kitchen deep clean",
+            "Bathroom sanitization",
+            "Office cleaning"
+        ],
+        'tips': [
+            "Regular cleaning prevents buildup",
+            "Use eco-friendly products",
+            "Declutter before deep cleaning",
+            "Ventilate while cleaning"
+        ],
+        'emergency_signs': [
+            "Pest infestation",
+            "Mold growth",
+            "Severe odors",
+            "Health hazards"
+        ],
+        'avg_time': "2-6 hours",
+        'avg_cost': "LKR 3,000 - 12,000"
+    },
+    'appliance_repair': {
+        'description': "Expert repair for all home appliances.",
+        'common_issues': [
+            "Refrigerator not cooling",
+            "Washing machine leaks",
+            "Dryer not heating",
+            "Dishwasher problems",
+            "Microwave issues",
+            "Oven repairs",
+            "AC not cooling",
+            "Water dispenser problems"
+        ],
+        'tips': [
+            "Regular maintenance extends life",
+            "Clean filters regularly",
+            "Don't overload machines",
+            "Unplug before cleaning"
+        ],
+        'emergency_signs': [
+            "Electrical sparks",
+            "Water leaking heavily",
+            "Strange burning smells",
+            "Complete failure"
+        ],
+        'avg_time': "1-3 hours",
+        'avg_cost': "LKR 2,000 - 10,000"
+    },
+    'hvac': {
+        'description': "Heating, ventilation, and air conditioning services.",
+        'common_issues': [
+            "AC not cooling",
+            "Poor airflow",
+            "Strange noises",
+            "High energy bills",
+            "Thermostat issues",
+            "Refrigerant leaks",
+            "Filter replacement",
+            "System installation"
+        ],
+        'tips': [
+            "Change filters monthly",
+            "Annual maintenance recommended",
+            "Keep outdoor unit clear",
+            "Set reasonable temperatures"
+        ],
+        'emergency_signs': [
+            "Complete system failure in extreme weather",
+            "Refrigerant leaks",
+            "Electrical issues",
+            "Carbon monoxide detection"
+        ],
+        'avg_time': "1-4 hours",
+        'avg_cost': "LKR 3,000 - 15,000"
+    },
+    'locksmith': {
+        'description': "24/7 locksmith services for emergencies and installations.",
+        'common_issues': [
+            "Locked out",
+            "Key replacement",
+            "Lock installation",
+            "Lock repair",
+            "Rekeying",
+            "Smart lock installation",
+            "Safe opening",
+            "Security upgrades"
+        ],
+        'tips': [
+            "Keep spare keys with trusted person",
+            "Lubricate locks regularly",
+            "Upgrade to deadbolts for security",
+            "Change locks when moving"
+        ],
+        'emergency_signs': [
+            "Locked out of home/car",
+            "Broken lock",
+            "Lost all keys",
+            "Security breach"
+        ],
+        'avg_time': "30 minutes - 2 hours",
+        'avg_cost': "LKR 2,000 - 8,000"
+    }
+}
+
 # FAQ Database
 FAQ_DATABASE = {
     'how to book': {
@@ -198,6 +419,49 @@ def get_response(intent, language='en', context=None):
         return RESPONSES[intent].get(language, RESPONSES[intent]['en'])
     return RESPONSES['default'].get(language, RESPONSES['default']['en'])
 
+def get_service_info(service_type, query_lower):
+    """Get detailed information about a specific service"""
+    if service_type not in SERVICE_KNOWLEDGE:
+        return None
+    
+    service_info = SERVICE_KNOWLEDGE[service_type]
+    response = f"🔧 **{service_type.replace('_', ' ').title()} Service**\n\n"
+    response += f"{service_info['description']}\n\n"
+    
+    # Check what user is asking about
+    if any(word in query_lower for word in ['cost', 'price', 'charge', 'fee', 'how much']):
+        response += f"💰 **Average Cost:** {service_info['avg_cost']}\n"
+        response += f"⏱️ **Typical Duration:** {service_info['avg_time']}\n\n"
+        response += "Note: Final cost depends on the specific issue and materials needed."
+    
+    elif any(word in query_lower for word in ['problem', 'issue', 'fix', 'repair', 'help']):
+        response += "**Common Issues We Fix:**\n"
+        for issue in service_info['common_issues'][:5]:
+            response += f"• {issue}\n"
+        response += f"\n⏱️ **Typical Duration:** {service_info['avg_time']}"
+    
+    elif any(word in query_lower for word in ['tip', 'advice', 'prevent', 'maintain', 'care']):
+        response += "**💡 Helpful Tips:**\n"
+        for tip in service_info['tips']:
+            response += f"• {tip}\n"
+    
+    elif any(word in query_lower for word in ['emergency', 'urgent', 'immediate', 'asap']):
+        response += "**🚨 Emergency Signs:**\n"
+        for sign in service_info['emergency_signs']:
+            response += f"• {sign}\n"
+        response += "\n⚠️ If you're experiencing any of these, book an emergency service immediately!"
+    
+    else:
+        # General information
+        response += "**Common Issues:**\n"
+        for issue in service_info['common_issues'][:4]:
+            response += f"• {issue}\n"
+        response += f"\n💰 **Cost:** {service_info['avg_cost']}\n"
+        response += f"⏱️ **Duration:** {service_info['avg_time']}\n\n"
+        response += "Would you like to book this service?"
+    
+    return response
+
 def search_faq(query):
     """Search FAQ database"""
     query_lower = query.lower()
@@ -205,6 +469,65 @@ def search_faq(query):
     for question, answers in FAQ_DATABASE.items():
         if any(word in query_lower for word in question.split()):
             return answers.get('en', '')
+    
+    return None
+
+def generate_smart_response(message, service_type, intent):
+    """Generate intelligent contextual responses"""
+    message_lower = message.lower()
+    
+    # Check if asking about a specific service
+    if service_type:
+        service_info = get_service_info(service_type, message_lower)
+        if service_info:
+            return service_info
+    
+    # Handle specific question patterns
+    question_patterns = {
+        'what': ['what is', 'what are', 'what does', 'what can'],
+        'how': ['how to', 'how do', 'how can', 'how much'],
+        'when': ['when', 'what time'],
+        'where': ['where', 'which area'],
+        'why': ['why', 'reason'],
+        'who': ['who', 'which technician']
+    }
+    
+    # Detect question type
+    for q_type, patterns in question_patterns.items():
+        if any(pattern in message_lower for pattern in patterns):
+            if q_type == 'how' and 'much' in message_lower:
+                return "💰 **Pricing Information:**\n\nOur rates vary by service type:\n\n• Plumbing: LKR 2,000 - 8,000\n• Electrical: LKR 1,500 - 10,000\n• Carpentry: LKR 3,000 - 15,000\n• Painting: LKR 5,000 - 25,000\n• Cleaning: LKR 3,000 - 12,000\n• Appliance Repair: LKR 2,000 - 10,000\n• HVAC: LKR 3,000 - 15,000\n• Locksmith: LKR 2,000 - 8,000\n\nFinal cost depends on:\n✓ Complexity of work\n✓ Materials required\n✓ Time needed\n✓ Emergency surcharge (if applicable)\n\nYou'll get a detailed estimate before confirming!"
+            
+            elif q_type == 'when':
+                return "🕐 **Service Hours:**\n\n• **Regular Services:** 8 AM - 8 PM (7 days a week)\n• **Emergency Services:** 24/7 available\n\n⚡ Emergency services have a 50% surcharge but we'll be there ASAP!\n\nTypical response times:\n• Regular: Within 2-4 hours\n• Emergency: Within 30-60 minutes"
+            
+            elif q_type == 'where':
+                return "📍 **Service Areas:**\n\nWe currently serve:\n• Colombo and all suburbs\n• Gampaha District\n• Kandy City\n• Galle and surrounding areas\n\n🚀 Expanding to more cities soon!\n\nNot sure if we cover your area? Share your location and I'll check for you!"
+    
+    # Check for specific keywords
+    if any(word in message_lower for word in ['leak', 'water', 'pipe', 'tap', 'drain']):
+        return get_service_info('plumbing', message_lower)
+    
+    elif any(word in message_lower for word in ['power', 'electric', 'light', 'switch', 'wiring']):
+        return get_service_info('electrical', message_lower)
+    
+    elif any(word in message_lower for word in ['door', 'window', 'furniture', 'wood', 'cabinet']):
+        return get_service_info('carpentry', message_lower)
+    
+    elif any(word in message_lower for word in ['paint', 'wall', 'color', 'ceiling']):
+        return get_service_info('painting', message_lower)
+    
+    elif any(word in message_lower for word in ['clean', 'maid', 'housekeeping', 'sanitize']):
+        return get_service_info('cleaning', message_lower)
+    
+    elif any(word in message_lower for word in ['fridge', 'washing', 'microwave', 'appliance', 'ac unit']):
+        return get_service_info('appliance_repair', message_lower)
+    
+    elif any(word in message_lower for word in ['ac', 'air conditioning', 'hvac', 'cooling', 'heating']):
+        return get_service_info('hvac', message_lower)
+    
+    elif any(word in message_lower for word in ['lock', 'key', 'locked out', 'security']):
+        return get_service_info('locksmith', message_lower)
     
     return None
 
@@ -240,11 +563,16 @@ def chat():
         # Extract entities
         service_type = extract_service_type(user_message)
         
-        # Check FAQ first
+        # Try intelligent response first
+        smart_response = generate_smart_response(user_message, service_type, intent)
+        
+        # Check FAQ
         faq_response = search_faq(user_message)
         
-        # Generate response
-        if faq_response:
+        # Generate response (priority: smart > faq > intent-based)
+        if smart_response:
+            bot_response = smart_response
+        elif faq_response:
             bot_response = faq_response
         else:
             bot_response = get_response(intent, language)
