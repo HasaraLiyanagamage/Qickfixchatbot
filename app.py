@@ -693,7 +693,7 @@ def fetch_available_technicians(service_type=None, location=None):
         # Build query parameters
         params = {}
         if service_type:
-            params['skills'] = service_type
+            params['skill'] = service_type  # Backend uses 'skill' not 'skills'
         if location:
             params['location'] = location
         
@@ -704,10 +704,15 @@ def fetch_available_technicians(service_type=None, location=None):
             timeout=5
         )
         
+        print(f"Backend response status: {response.status_code}")
+        
         if response.status_code == 200:
             data = response.json()
-            return data.get('technicians', [])
+            print(f"Backend returned: {len(data) if isinstance(data, list) else 'not a list'} technicians")
+            # Backend returns array directly, not object with 'technicians' property
+            return data if isinstance(data, list) else []
         else:
+            print(f"Backend error: {response.status_code}")
             return None
     except Exception as e:
         print(f"Error fetching technicians: {e}")
@@ -721,17 +726,40 @@ def format_technician_list(technicians, service_type):
     response = f"👨‍🔧 **Available {service_type.title()} Technicians:**\n\n"
     
     for i, tech in enumerate(technicians[:5], 1):  # Show max 5 technicians
-        name = tech.get('name', 'Technician')
+        # Get user info (backend structure: tech.user.name)
+        user = tech.get('user', {})
+        name = user.get('name', 'Technician') if isinstance(user, dict) else 'Technician'
+        phone = user.get('phone', '') if isinstance(user, dict) else ''
+        
+        # Get location (backend structure: tech.location.coordinates)
         location = tech.get('location', {})
-        city = location.get('city', 'N/A')
-        area = location.get('area', '')
-        rating = tech.get('averageRating', 0)
-        completed_jobs = tech.get('completedJobs', 0)
+        # Location is stored as GeoJSON: {type: 'Point', coordinates: [lng, lat]}
+        coords = location.get('coordinates', []) if isinstance(location, dict) else []
+        
+        # Get rating and skills
+        rating = tech.get('rating', 0)
+        skills = tech.get('skills', [])
+        distance = tech.get('distance', None)
         
         response += f"**{i}. {name}**\n"
-        response += f"   📍 Location: {area}, {city}\n" if area else f"   📍 Location: {city}\n"
+        
+        # Show phone if available
+        if phone:
+            response += f"   📞 Phone: {phone}\n"
+        
+        # Show distance if calculated
+        if distance and distance < 999:
+            response += f"   📍 Distance: {distance:.1f} km away\n"
+        
+        # Show rating
         response += f"   ⭐ Rating: {rating:.1f}/5.0\n"
-        response += f"   ✅ Completed Jobs: {completed_jobs}\n\n"
+        
+        # Show skills
+        if skills and len(skills) > 0:
+            skills_str = ', '.join(skills[:3])  # Show first 3 skills
+            response += f"   🔧 Skills: {skills_str}\n"
+        
+        response += "\n"
     
     response += "Would you like to book one of these technicians? Just say 'book' and I'll help you!"
     return response
