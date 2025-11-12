@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 import json
 import re
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +20,9 @@ CHATBOT_CONFIG = {
     'version': '1.0.0',
     'languages': ['en', 'si', 'ta']
 }
+
+# Backend API Configuration
+BACKEND_URL = os.environ.get('BACKEND_URL', 'https://quickfix-backend-6ztz.onrender.com')
 
 # Service Types
 SERVICE_TYPES = [
@@ -683,9 +687,66 @@ def search_faq(query):
     
     return None
 
+def fetch_available_technicians(service_type=None, location=None):
+    """Fetch available technicians from backend"""
+    try:
+        # Build query parameters
+        params = {}
+        if service_type:
+            params['skills'] = service_type
+        if location:
+            params['location'] = location
+        
+        # Call backend API
+        response = requests.get(
+            f'{BACKEND_URL}/api/technicians/available',
+            params=params,
+            timeout=5
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            return data.get('technicians', [])
+        else:
+            return None
+    except Exception as e:
+        print(f"Error fetching technicians: {e}")
+        return None
+
+def format_technician_list(technicians, service_type):
+    """Format technician information for display"""
+    if not technicians or len(technicians) == 0:
+        return f"I don't have specific technician details available right now, but we have qualified {service_type} professionals ready to help you!\n\nWould you like to book a service? Our system will match you with the best available technician in your area."
+    
+    response = f"👨‍🔧 **Available {service_type.title()} Technicians:**\n\n"
+    
+    for i, tech in enumerate(technicians[:5], 1):  # Show max 5 technicians
+        name = tech.get('name', 'Technician')
+        location = tech.get('location', {})
+        city = location.get('city', 'N/A')
+        area = location.get('area', '')
+        rating = tech.get('averageRating', 0)
+        completed_jobs = tech.get('completedJobs', 0)
+        
+        response += f"**{i}. {name}**\n"
+        response += f"   📍 Location: {area}, {city}\n" if area else f"   📍 Location: {city}\n"
+        response += f"   ⭐ Rating: {rating:.1f}/5.0\n"
+        response += f"   ✅ Completed Jobs: {completed_jobs}\n\n"
+    
+    response += "Would you like to book one of these technicians? Just say 'book' and I'll help you!"
+    return response
+
 def generate_smart_response(message, service_type, intent):
     """Generate intelligent contextual responses"""
     message_lower = message.lower()
+    
+    # Check if asking for technician names/list/details
+    if any(word in message_lower for word in ['name', 'names', 'list', 'available', 'show me', 'who are', 'village', 'location', 'area', 'city']):
+        if service_type:
+            # User is asking for specific technician names/locations
+            technicians = fetch_available_technicians(service_type)
+            if technicians is not None:
+                return format_technician_list(technicians, service_type)
     
     # Check if asking about a specific service
     if service_type:
