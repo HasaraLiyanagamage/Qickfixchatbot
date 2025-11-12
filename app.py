@@ -624,8 +624,8 @@ def get_service_info(service_type, query_lower):
     response = f"🔧 **{service_type.replace('_', ' ').title()} Service**\n\n"
     response += f"{service_info['description']}\n\n"
     
-    # Check what user is asking about
-    if any(word in query_lower for word in ['technician', 'worker', 'professional', 'expert', 'who', 'qualification', 'certified', 'licensed', 'experienced']):
+    # Check what user is asking about (but NOT if asking for names/list)
+    if any(word in query_lower for word in ['qualification', 'certified', 'licensed', 'experienced', 'training']) and not any(word in query_lower for word in ['name', 'names', 'list', 'available', 'show me', 'who are']):
         # Technician information
         tech_info = service_info.get('technician_info', {})
         response += "👨‍🔧 **Our Technicians:**\n\n"
@@ -740,13 +740,21 @@ def generate_smart_response(message, service_type, intent):
     """Generate intelligent contextual responses"""
     message_lower = message.lower()
     
-    # Check if asking for technician names/list/details
-    if any(word in message_lower for word in ['name', 'names', 'list', 'available', 'show me', 'who are', 'village', 'location', 'area', 'city']):
-        if service_type:
-            # User is asking for specific technician names/locations
-            technicians = fetch_available_technicians(service_type)
-            if technicians is not None:
-                return format_technician_list(technicians, service_type)
+    # Check if asking for technician names/list/details (HIGH PRIORITY)
+    asking_for_list = any(phrase in message_lower for phrase in [
+        'who are the', 'show me', 'list of', 'available', 
+        'names of', 'name of', 'technician names', 'plumber names',
+        'electrician names', 'carpenter names', 'painter names',
+        'which technicians', 'what technicians'
+    ])
+    
+    asking_for_location = any(word in message_lower for word in ['village', 'location', 'area', 'city', 'where are'])
+    
+    if (asking_for_list or asking_for_location) and service_type:
+        # User is asking for specific technician names/locations
+        technicians = fetch_available_technicians(service_type)
+        if technicians is not None:
+            return format_technician_list(technicians, service_type)
     
     # Check if asking about a specific service
     if service_type:
