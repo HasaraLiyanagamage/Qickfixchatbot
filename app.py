@@ -10,6 +10,22 @@ from datetime import datetime
 import json
 import re
 import requests
+try:
+    import nltk
+    from nltk.tokenize import word_tokenize
+    from nltk.corpus import stopwords
+    from nltk.stem import WordNetLemmatizer
+    NLTK_AVAILABLE = True
+    # Download required NLTK data (only first time)
+    try:
+        nltk.data.find('tokenizers/punkt')
+    except LookupError:
+        nltk.download('punkt', quiet=True)
+        nltk.download('stopwords', quiet=True)
+        nltk.download('wordnet', quiet=True)
+except ImportError:
+    NLTK_AVAILABLE = False
+    print("NLTK not available, using basic NLP")
 
 app = Flask(__name__)
 CORS(app)
@@ -17,9 +33,13 @@ CORS(app)
 # Chatbot Configuration
 CHATBOT_CONFIG = {
     'name': 'QuickFix Assistant',
-    'version': '1.0.0',
-    'languages': ['en', 'si', 'ta']
+    'version': '2.0.0',
+    'languages': ['en', 'si', 'ta'],
+    'features': ['NLP', 'Multi-language', 'Context-aware', 'Booking Integration']
 }
+
+# Conversation Context Storage (in-memory, use Redis/DB in production)
+conversation_contexts = {}
 
 # Backend API Configuration
 BACKEND_URL = os.environ.get('BACKEND_URL', 'https://quickfix-backend-6ztz.onrender.com')
@@ -33,44 +53,55 @@ SERVICE_TYPES = [
 # Intent Patterns
 INTENT_PATTERNS = {
     'greeting': [
-        r'\b(hi|hello|hey|good morning|good afternoon|good evening)\b',
+        r'\b(hi|hello|hey|good morning|good afternoon|good evening|greetings)\b',
         r'\bහායි\b', r'\bහෙලෝ\b',  # Sinhala
         r'\bவணக்கம்\b'  # Tamil
     ],
     'emergency': [
-        r'\b(emergency|urgent|asap|immediately|quick|fast|help)\b',
-        r'\b(leak|flooding|fire|shock|broken|not working)\b',
+        r'\b(emergency|urgent|asap|immediately|quick|fast|help|sos)\b',
+        r'\b(leak|flooding|fire|shock|broken|not working|burst)\b',
         r'\bදැන්ම\b', r'\bඉක්මනින්\b',  # Sinhala
         r'\bஉடனடி\b'  # Tamil
     ],
     'booking': [
-        r'\b(book|schedule|appointment|need|want|looking for)\b',
-        r'\b(technician|plumber|electrician|carpenter)\b',
+        r'\b(book|schedule|appointment|need|want|looking for|hire|get)\b',
+        r'\b(technician|plumber|electrician|carpenter|service)\b',
         r'\bබුකින්\b', r'\bතාක්ෂණික\b',  # Sinhala
         r'\bபதிவு\b'  # Tamil
     ],
     'pricing': [
-        r'\b(cost|price|charge|fee|how much|rate)\b',
+        r'\b(cost|price|charge|fee|how much|rate|expensive|cheap|afford)\b',
         r'\bවිය\b', r'\bගාස්තුව\b',  # Sinhala
         r'\bவிலை\b'  # Tamil
     ],
+    'payment': [
+        r'\b(payment|pay|paid|paying|invoice|receipt|refund)\b',
+        r'\b(cash|card|credit|debit|wallet|bank transfer)\b',
+        r'\bගෙවීම\b',  # Sinhala
+        r'\bசெலுத்துதல்\b'  # Tamil
+    ],
     'status': [
-        r'\b(status|where|location|track|eta|arriving)\b',
+        r'\b(status|where|location|track|eta|arriving|progress)\b',
         r'\bස්ථානය\b',  # Sinhala
         r'\bநிலை\b'  # Tamil
     ],
     'cancel': [
-        r'\b(cancel|stop|abort|don\'t want)\b',
+        r'\b(cancel|stop|abort|don\'t want|remove|delete)\b',
         r'\bඅවලංගු\b',  # Sinhala
         r'\bரத்து\b'  # Tamil
     ],
     'complaint': [
-        r'\b(complaint|issue|problem|not satisfied|bad|poor)\b',
+        r'\b(complaint|issue|problem|not satisfied|bad|poor|disappointed|unhappy)\b',
         r'\bගැටලුව\b',  # Sinhala
         r'\bபிரச்சினை\b'  # Tamil
     ],
+    'rating': [
+        r'\b(rate|rating|review|feedback|stars|recommend)\b',
+        r'\bමිණුම\b',  # Sinhala
+        r'\bமதிப்பீடு\b'  # Tamil
+    ],
     'thanks': [
-        r'\b(thank|thanks|appreciate)\b',
+        r'\b(thank|thanks|appreciate|grateful)\b',
         r'\bස්තූතියි\b',  # Sinhala
         r'\bநன்றி\b'  # Tamil
     ]
@@ -113,8 +144,18 @@ RESPONSES = {
         'si': "ඔබට ගැටලුවක් ඇති බව දැනගැනීමට කණගාටුයි. 😔",
         'ta': "உங்களுக்கு சிக்கல் இருப்பதைக் கேட்டு வருந்துகிறேன். 😔"
     },
+    'payment': {
+        'en': "💳 **Payment Information:**\n\nWe accept multiple payment methods:\n• 💵 Cash (pay after service)\n• 💳 Credit/Debit Cards\n• 📱 Mobile Wallets\n• 🏦 Bank Transfer\n\n**Payment Process:**\n1. Service completed\n2. Technician provides final bill\n3. You review and approve\n4. Choose payment method\n5. Technician confirms receipt\n\n✅ All payments are secure and tracked in the app!",
+        'si': "💳 ගෙවීම් තොරතුරු:",
+        'ta': "💳 பணம் செலுத்தும் தகவல்:"
+    },
+    'rating': {
+        'en': "⭐ **Rating & Reviews:**\n\nYour feedback helps us improve!\n\nAfter service completion:\n1. Rate your technician (1-5 stars)\n2. Write a review (optional)\n3. Help others make informed decisions\n\n🏆 Top-rated technicians get priority matching!\n\nWould you like to rate a recent service?",
+        'si': "⭐ ශ්‍රේණිගත කිරීම සහ සමාලෝචන:",
+        'ta': "⭐ மதிப்பீடு மற்றும் விமர்சனங்கள்:"
+    },
     'thanks': {
-        'en': "You're welcome! 😊 Is there anything else I can help you with?\n\nIf you need immediate assistance, just ask!\nFor urgent repairs, say 'emergency'.",
+        'en': "You're welcome! 😊 Is there anything else I can help you with?\n\nI can assist with:\n• Booking a service\n• Checking prices\n• Tracking your technician\n• Payment questions\n• General inquiries\n\nFor urgent repairs, just say 'emergency'!",
         'si': "ඔබට සාදරයෙන් පිළිගනිමු! 😊",
         'ta': "நல்வரவு! 😊"
     },
@@ -562,14 +603,43 @@ FAQ_DATABASE = {
     }
 }
 
+def preprocess_text(text):
+    """Preprocess text using NLP techniques"""
+    if not NLTK_AVAILABLE:
+        return text.lower()
+    
+    try:
+        # Tokenize
+        tokens = word_tokenize(text.lower())
+        
+        # Remove stopwords
+        stop_words = set(stopwords.words('english'))
+        tokens = [word for word in tokens if word.isalnum() and word not in stop_words]
+        
+        # Lemmatize
+        lemmatizer = WordNetLemmatizer()
+        tokens = [lemmatizer.lemmatize(word) for word in tokens]
+        
+        return ' '.join(tokens)
+    except:
+        return text.lower()
+
 def detect_intent(message):
-    """Detect user intent from message"""
+    """Detect user intent from message with improved accuracy"""
     message_lower = message.lower()
     
+    # Score each intent
+    intent_scores = {}
     for intent, patterns in INTENT_PATTERNS.items():
+        score = 0
         for pattern in patterns:
             if re.search(pattern, message_lower, re.IGNORECASE):
-                return intent
+                score += 1
+        intent_scores[intent] = score
+    
+    # Get intent with highest score
+    if max(intent_scores.values()) > 0:
+        return max(intent_scores, key=intent_scores.get)
     
     return 'default'
 
@@ -764,7 +834,77 @@ def format_technician_list(technicians, service_type):
     response += "Would you like to book one of these technicians? Just say 'book' and I'll help you!"
     return response
 
-def generate_smart_response(message, service_type, intent):
+def get_conversation_context(user_id):
+    """Get conversation context for a user"""
+    if user_id not in conversation_contexts:
+        conversation_contexts[user_id] = {
+            'last_intent': None,
+            'last_service': None,
+            'booking_in_progress': False,
+            'messages': [],
+            'created_at': datetime.now().isoformat()
+        }
+    return conversation_contexts[user_id]
+
+def update_conversation_context(user_id, intent=None, service_type=None, message=None):
+    """Update conversation context"""
+    context = get_conversation_context(user_id)
+    
+    if intent:
+        context['last_intent'] = intent
+    if service_type:
+        context['last_service'] = service_type
+    if message:
+        context['messages'].append({
+            'message': message,
+            'timestamp': datetime.now().isoformat()
+        })
+        # Keep only last 10 messages
+        context['messages'] = context['messages'][-10:]
+    
+    conversation_contexts[user_id] = context
+    return context
+
+def initiate_booking(service_type, user_id):
+    """Helper to initiate booking process"""
+    context = get_conversation_context(user_id)
+    context['booking_in_progress'] = True
+    context['booking_service'] = service_type
+    
+    response = f"🎯 **Starting {service_type.replace('_', ' ').title()} Booking**\n\n"
+    response += "To complete your booking, I need:\n"
+    response += "1. ✅ Service type: " + service_type.replace('_', ' ').title() + "\n"
+    response += "2. 📍 Your location\n"
+    response += "3. ⚡ Urgency level (Regular/Emergency)\n"
+    response += "4. 📝 Brief description of the issue\n\n"
+    response += "Please open the app and tap 'Request Service' to complete your booking, or tell me if this is an emergency!"
+    
+    return response
+
+def check_payment_status(booking_id):
+    """Check payment status for a booking"""
+    try:
+        response = requests.get(
+            f'{BACKEND_URL}/api/bookings/{booking_id}',
+            timeout=5
+        )
+        if response.status_code == 200:
+            booking = response.json()
+            payment = booking.get('payment', {})
+            status = payment.get('status', 'pending')
+            method = payment.get('method', 'N/A')
+            
+            if status == 'completed':
+                return f"✅ Payment completed via {method.upper()}"
+            elif status == 'pending':
+                return f"⏳ Payment pending - Method: {method.upper()}"
+            else:
+                return f"❌ Payment status: {status}"
+        return "Unable to fetch payment status"
+    except:
+        return "Unable to connect to server"
+
+def generate_smart_response(message, service_type, intent, user_id='anonymous'):
     """Generate intelligent contextual responses"""
     message_lower = message.lower()
     
@@ -851,7 +991,7 @@ def health_check():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    """Main chat endpoint"""
+    """Main chat endpoint with enhanced NLP and context management"""
     try:
         data = request.get_json()
         
@@ -864,6 +1004,12 @@ def chat():
         user_id = data.get('userId', 'anonymous')
         session_id = data.get('sessionId', 'default')
         
+        # Get conversation context
+        context = get_conversation_context(user_id)
+        
+        # Preprocess message with NLP
+        processed_message = preprocess_text(user_message)
+        
         # Detect language and intent
         language = detect_language(user_message)
         intent = detect_intent(user_message)
@@ -871,27 +1017,48 @@ def chat():
         # Extract entities
         service_type = extract_service_type(user_message)
         
-        # Try intelligent response first
-        smart_response = generate_smart_response(user_message, service_type, intent)
+        # Check for booking ID in message (for payment/status queries)
+        booking_id_match = re.search(r'\b[a-f0-9]{24}\b', user_message)
+        booking_id = booking_id_match.group(0) if booking_id_match else None
         
-        # Check FAQ
-        faq_response = search_faq(user_message)
-        
-        # Generate response (priority: smart > faq > intent-based)
-        if smart_response:
-            bot_response = smart_response
-        elif faq_response:
-            bot_response = faq_response
+        # Handle payment queries
+        if intent == 'payment' and booking_id:
+            payment_status = check_payment_status(booking_id)
+            bot_response = f"💳 **Payment Status for Booking {booking_id[:8]}...**\n\n{payment_status}\n\nNeed help with anything else?"
+        # Handle booking intent with service type
+        elif intent == 'booking' and service_type:
+            bot_response = initiate_booking(service_type, user_id)
+        # Try intelligent response
         else:
-            bot_response = get_response(intent, language)
+            smart_response = generate_smart_response(user_message, service_type, intent, user_id)
+            
+            # Check FAQ
+            faq_response = search_faq(user_message)
+            
+            # Generate response (priority: smart > faq > intent-based)
+            if smart_response:
+                bot_response = smart_response
+            elif faq_response:
+                bot_response = faq_response
+            else:
+                bot_response = get_response(intent, language)
+                
+                # Add context-aware suggestions
+                if context['last_service'] and intent == 'default':
+                    bot_response += f"\n\n💡 I noticed you were asking about {context['last_service']}. Would you like to book this service?"
+        
+        # Update conversation context
+        update_conversation_context(user_id, intent, service_type, user_message)
         
         # Build response
         response_data = {
             'message': bot_response,
+            'reply': bot_response,  # For compatibility
             'intent': intent,
             'language': language,
             'timestamp': datetime.now().isoformat(),
-            'sessionId': session_id
+            'sessionId': session_id,
+            'context': intent
         }
         
         # Add extracted entities
@@ -903,17 +1070,31 @@ def chat():
             response_data['priority'] = 'high'
             response_data['suggestedAction'] = 'emergency_booking'
         
+        if intent == 'booking':
+            response_data['suggestedAction'] = 'open_booking_screen'
+        
+        # Add conversation stats
+        response_data['conversationStats'] = {
+            'messageCount': len(context['messages']),
+            'lastIntent': context['last_intent'],
+            'lastService': context['last_service']
+        }
+        
         # Log conversation (in production, save to database)
         print(f"[{datetime.now()}] User {user_id}: {user_message}")
-        print(f"[{datetime.now()}] Bot: {bot_response}")
+        print(f"[{datetime.now()}] Intent: {intent}, Service: {service_type}")
+        print(f"[{datetime.now()}] Bot: {bot_response[:100]}...")
         
         return jsonify(response_data)
         
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
             'error': 'Internal server error',
-            'message': 'Sorry, I encountered an error. Please try again.'
+            'message': 'Sorry, I encountered an error. Please try again.',
+            'reply': 'Sorry, I encountered an error. Please try again.'
         }), 500
 
 @app.route('/intents', methods=['GET'])
@@ -931,6 +1112,53 @@ def get_faq():
         'faqs': FAQ_DATABASE
     })
 
+@app.route('/analytics', methods=['GET'])
+def get_analytics():
+    """Get chatbot analytics"""
+    total_conversations = len(conversation_contexts)
+    
+    # Calculate intent distribution
+    intent_counts = {}
+    for context in conversation_contexts.values():
+        intent = context.get('last_intent', 'unknown')
+        intent_counts[intent] = intent_counts.get(intent, 0) + 1
+    
+    # Calculate service distribution
+    service_counts = {}
+    for context in conversation_contexts.values():
+        service = context.get('last_service')
+        if service:
+            service_counts[service] = service_counts.get(service, 0) + 1
+    
+    return jsonify({
+        'totalConversations': total_conversations,
+        'intentDistribution': intent_counts,
+        'serviceDistribution': service_counts,
+        'features': CHATBOT_CONFIG['features'],
+        'version': CHATBOT_CONFIG['version'],
+        'nltk_enabled': NLTK_AVAILABLE
+    })
+
+@app.route('/context/<user_id>', methods=['GET'])
+def get_user_context(user_id):
+    """Get conversation context for a specific user"""
+    context = get_conversation_context(user_id)
+    return jsonify(context)
+
+@app.route('/context/<user_id>', methods=['DELETE'])
+def clear_user_context(user_id):
+    """Clear conversation context for a specific user"""
+    if user_id in conversation_contexts:
+        del conversation_contexts[user_id]
+        return jsonify({'message': 'Context cleared successfully'})
+    return jsonify({'message': 'No context found for user'}), 404
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
+    print(f"🤖 QuickFix Chatbot v{CHATBOT_CONFIG['version']} starting...")
+    print(f"📦 Features: {', '.join(CHATBOT_CONFIG['features'])}")
+    print(f"🔤 Languages: {', '.join(CHATBOT_CONFIG['languages'])}")
+    print(f"🧠 NLTK: {'Enabled' if NLTK_AVAILABLE else 'Disabled'}")
+    print(f"🌐 Backend: {BACKEND_URL}")
+    print(f"🚀 Server running on port {port}")
     app.run(host='0.0.0.0', port=port, debug=True)
