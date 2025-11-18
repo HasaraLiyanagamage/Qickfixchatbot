@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: quickfix-chatbot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.10
+      - key: BACKEND_URL
+        value: https://quickfix-backend-6ztz.onrender.com

@@ -1,0 +1,13 @@
+# Simplified requirements for Python 3.13 compatibility
+# Use this if the main requirements.txt fails
+
+Flask==3.0.0
+flask-cors==4.0.0
+gunicorn==21.2.0
+python-dotenv==1.0.1
+requests==2.31.0
+nltk==3.8.1
+
+# Note: numpy and scikit-learn removed for compatibility
+# The chatbot will work without advanced NLP preprocessing
+# All core features (intents, context, multi-language) still functional
