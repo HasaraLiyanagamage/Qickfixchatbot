@@ -13,9 +13,16 @@ pip install -r requirements.txt
 
 # Run the chatbot
 python app.py
+
+# In another terminal, test it
+python test_chatbot.py
 ```
 
 The chatbot will start on `http://localhost:5000`
+
+### ⚠️ Important: Python Version
+Use **Python 3.11.7** or **Python 3.10.13** for best compatibility.
+Avoid Python 3.13+ as some dependencies are not yet compatible.
 
 ---
 
