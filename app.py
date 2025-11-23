@@ -979,6 +979,25 @@ def generate_smart_response(message, service_type, intent, user_id='anonymous'):
     
     return None
 
+@app.route('/', methods=['GET'])
+def home():
+    """Root endpoint"""
+    return jsonify({
+        'service': 'QuickFix AI Chatbot',
+        'version': CHATBOT_CONFIG['version'],
+        'status': 'running',
+        'endpoints': {
+            'health': '/health',
+            'chat': '/chat (POST)',
+            'intents': '/intents',
+            'faq': '/faq',
+            'analytics': '/analytics'
+        },
+        'features': CHATBOT_CONFIG['features'],
+        'languages': CHATBOT_CONFIG['languages'],
+        'timestamp': datetime.now().isoformat()
+    })
+
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
