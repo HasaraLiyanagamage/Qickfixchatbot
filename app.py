@@ -1020,8 +1020,15 @@ def chat():
             }), 400
         
         user_message = data['message']
-        user_id = data.get('userId', 'anonymous')
-        session_id = data.get('sessionId', 'default')
+        # Support both userId and user_id for compatibility
+        user_id = data.get('userId') or data.get('user_id', 'anonymous')
+        session_id = data.get('sessionId') or data.get('session_id', 'default')
+        
+        # Debug logging
+        print(f"\n=== NEW CHAT REQUEST ===")
+        print(f"User ID: {user_id}")
+        print(f"Session ID: {session_id}")
+        print(f"Message: {user_message}")
         
         # Get conversation context
         context = get_conversation_context(user_id)
