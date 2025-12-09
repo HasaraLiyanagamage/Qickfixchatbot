@@ -115,7 +115,7 @@ RESPONSES = {
         'ta': "வணக்கம்! நான் QuickFix உதவியாளர். இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?\n\nநான் உங்களுக்கு உதவ முடியும்:\n• சேவையை பதிவு செய்தல்\n• அவசர பழுதுபார்ப்பு\n• விலைகளை சரிபார்த்தல்\n• உங்கள் தொழில்நுட்ப வல்லுநரைக் கண்காணித்தல்\n• கேள்விகளுக்கு பதிலளித்தல்"
     },
     'emergency': {
-        'en': " I understand this is urgent! Let me help you immediately.\n\nWhat type of emergency service do you need?\n• Plumbing (water leak, pipe burst)\n• Electrical (power failure, short circuit)\n• Locksmith (locked out)\n• Other\n\nPlease share your location so I can find the nearest technician.",
+        'en': "I understand this is urgent! Let me help you immediately.\n\nWhat type of emergency service do you need?\n• Plumbing (water leak, pipe burst)\n• Electrical (power failure, short circuit)\n• Locksmith (locked out)\n• Other\n\nPlease share your location so I can find the nearest technician.",
         'si': " මට තේරෙනවා මේක හදිසියි! මම ඔබට වහාම උදව් කරන්නම්.\n\nඔබට අවශ්‍ය හදිසි සේවාව කුමක්ද?\n• ජල නළ (ජල කාන්දුවීම, පයිප්ප පුපුරා යාම)\n• විදුලි (විදුලිය නැතිවීම, කෙටි පරිපථයක්)\n• අගුළු (අගුළු වැටී ඇත)\n• වෙනත්\n\nකරුණාකර ඔබේ ස්ථානය බෙදා ගන්න, මට ආසන්නතම කාර්මික ශිල්පියා සොයා ගත හැකිය.",
         'ta': " இது அவசரம் என்று எனக்குப் புரிகிறது! நான் உடனடியாக உங்களுக்கு உதவுகிறேன்.\n\nஉங்களுக்கு என்ன வகையான அவசர சேவை தேவை?\n• குழாய் (நீர் கசிவு, குழாய் வெடிப்பு)\n• மின்சாரம் (மின்சாரம் தோல்வி, குறுகிய சுற்று)\n• பூட்டு (பூட்டப்பட்டது)\n• மற்றவை\n\nதயவுசெய்து உங்கள் இருப்பிடத்தைப் பகிரவும், நான் அருகிலுள்ள தொழில்நுட்ப வல்லுநரைக் கண்டுபிடிக்க முடியும்."
     },
@@ -125,7 +125,7 @@ RESPONSES = {
         'ta': "நான் உங்களுக்கு சேவையை பதிவு செய்ய உதவுகிறேன்!\n\nஉங்களுக்கு என்ன சேவை தேவை?\n1. குழாய்\n2. மின்சாரம்\n3. தச்சு வேலை\n4. ஓவியம்\n5. சுத்தம்\n6. சாதன பழுதுபார்ப்பு\n7. HVAC\n8. பூட்டு\n\nதயவுசெய்து ஒரு எண்ணைத் தேர்ந்தெடுக்கவும் அல்லது உங்களுக்கு என்ன தேவை என்று சொல்லுங்கள்."
     },
     'pricing': {
-        'en': " Our pricing is transparent and fair:\n\n• Base Service Fee: LKR 500-1000\n• Hourly Rate: LKR 1000-2000/hour\n• Emergency Service: +50% surcharge\n• Materials: Actual cost\n\nFinal cost depends on:\n✓ Service type\n✓ Time required\n✓ Materials needed\n✓ Distance traveled\n\nYou'll get an estimate before confirming the booking!",
+        'en': "Our pricing is transparent and fair:\n\n• Base Service Fee: LKR 500-1000\n• Hourly Rate: LKR 1000-2000/hour\n• Emergency Service: +50% surcharge\n• Materials: Actual cost\n\nFinal cost depends on:\n• Service type\n• Time required\n• Materials needed\n• Distance traveled\n\nYou'll get an estimate before confirming the booking!",
         'si': " අපගේ මිල ගණන් විනිවිද පෙනෙන සහ සාධාරණ වේ:\n\n• මූලික සේවා ගාස්තුව: LKR 500-1000\n• පැය අනුපාතය: LKR 1000-2000/පැය\n• හදිසි සේවාව: +50% අතිරේක ගාස්තුව\n• ද්‍රව්‍ය: සැබෑ පිරිවැය\n\nඅවසාන පිරිවැය රඳා පවතින්නේ:\n✓ සේවා වර්ගය\n✓ අවශ්‍ය කාලය\n✓ අවශ්‍ය ද්‍රව්‍ය\n✓ ගමන් කළ දුර\n\nවෙන්කරවා ගැනීම තහවුරු කිරීමට පෙර ඔබට ඇස්තමේන්තුවක් ලැබෙනු ඇත!",
         'ta': "எங்கள் விலை வெளிப்படையானது மற்றும் நியாயமானது:\n\n• அடிப்படை சேவை கட்டணம்: LKR 500-1000\n• மணிநேர விகிதம்: LKR 1000-2000/மணி\n• அவசர சேவை: +50% கூடுதல் கட்டணம்\n• பொருட்கள்: உண்மையான செலவு\n\nஇறுதி செலவு சார்ந்துள்ளது:\n✓ சேவை வகை\n✓ தேவையான நேரம்\n✓ தேவையான பொருட்கள்\n✓ பயணித்த தூரம்\n\nபதிவை உறுதிப்படுத்துவதற்கு முன் உங்களுக்கு மதிப்பீடு கிடைக்கும்!"
     },
@@ -145,12 +145,12 @@ RESPONSES = {
         'ta': "உங்களுக்கு சிக்கல் இருப்பதைக் கேட்டு வருந்துகிறேன். "
     },
     'payment': {
-        'en': " **Payment Information:**\n\nWe accept multiple payment methods:\n•  Cash (pay after service)\n•  Credit/Debit Cards\n•  Mobile Wallets\n•  Bank Transfer\n\n**Payment Process:**\n1. Service completed\n2. Technician provides final bill\n3. You review and approve\n4. Choose payment method\n5. Technician confirms receipt\n\n All payments are secure and tracked in the app!",
+        'en': "**Payment Information:**\n\nWe accept multiple payment methods:\n• Cash (pay after service)\n• Credit/Debit Cards\n• Mobile Wallets\n• Bank Transfer\n\n**Payment Process:**\n1. Service completed\n2. Technician provides final bill\n3. You review and approve\n4. Choose payment method\n5. Technician confirms receipt\n\nAll payments are secure and tracked in the app!",
         'si': " ගෙවීම් තොරතුරු:",
         'ta': "பணம் செலுத்தும் தகவல்:"
     },
     'rating': {
-        'en': " **Rating & Reviews:**\n\nYour feedback helps us improve!\n\nAfter service completion:\n1. Rate your technician (1-5 stars)\n2. Write a review (optional)\n3. Help others make informed decisions\n\n🏆 Top-rated technicians get priority matching!\n\nWould you like to rate a recent service?",
+        'en': "**Rating & Reviews:**\n\nYour feedback helps us improve!\n\nAfter service completion:\n1. Rate your technician (1-5 stars)\n2. Write a review (optional)\n3. Help others make informed decisions\n\nTop-rated technicians get priority matching!\n\nWould you like to rate a recent service?",
         'si': " ශ්‍රේණිගත කිරීම සහ සමාලෝචන:",
         'ta': " மதிப்பீடு மற்றும் விமர்சனங்கள்:"
     },
@@ -160,9 +160,9 @@ RESPONSES = {
         'ta': "நல்வரவு!"
     },
     'default': {
-        'en': "I'm here to help! I can assist you with:\n\n📱 Booking a service\n Emergency repairs\n Pricing information\n Tracking your technician\n General questions\n\nWhat would you like to know?",
-        'si': "මම උදව් කිරීමට මෙහි සිටිමි! මට ඔබට උදව් කළ හැක්කේ:\n\n📱 සේවාවක් වෙන්කරවා ගැනීම\n හදිසි අලුත්වැඩියා\n මිල ගණන් තොරතුරු\n ඔබේ කාර්මික ශිල්පියා ලුහුබැඳීම\n සාමාන්‍ය ප්‍රශ්න\n\nඔබ දැන ගැනීමට කැමති කුමක්ද?",
-        'ta': "நான் உதவ இங்கே இருக்கிறேன்! நான் உங்களுக்கு உதவ முடியும்:\n\n📱 சேவையை பதிவு செய்தல்\n அவசர பழுதுபார்ப்பு\n விலை தகவல்\n உங்கள் தொழில்நுட்ப வல்லுநரைக் கண்காணித்தல்\n பொது கேள்விகள்\n\nநீங்கள் என்ன தெரிந்து கொள்ள விரும்புகிறீர்கள்?"
+        'en': "I'm here to help! I can assist you with:\n\n• Booking a service\n• Emergency repairs\n• Pricing information\n• Tracking your technician\n• General questions\n\nWhat would you like to know?",
+        'si': "මම උදව් කිරීමට මෙහි සිටිමි! මට ඔබට උදව් කළ හැක්කේ:\n\n• සේවාවක් වෙන්කරවා ගැනීම\n• හදිසි අලුත්වැඩියා\n• මිල ගණන් තොරතුරු\n• ඔබේ කාර්මික ශිල්පියා ලුහුබැඳීම\n• සාමාන්‍ය ප්‍රශ්න\n\nඔබ දැන ගැනීමට කැමති කුමක්ද?",
+        'ta': "நான் உதவ இங்கே இருக்கிறேன்! நான் உங்களுக்கு உதவ முடியும்:\n\n• சேவையை பதிவு செய்தல்\n• அவசர பழுதுபார்ப்பு\n• விலை தகவல்\n• உங்கள் தொழில்நுட்ப வல்லுநரைக் கண்காணித்தல்\n• பொது கேள்விகள்\n\nநீங்கள் என்ன தெரிந்து கொள்ள விரும்புகிறீர்கள்?"
     }
 }
 
@@ -691,7 +691,7 @@ def get_service_info(service_type, query_lower):
         return None
     
     service_info = SERVICE_KNOWLEDGE[service_type]
-    response = f"🔧 **{service_type.replace('_', ' ').title()} Service**\n\n"
+    response = f"**{service_type.replace('_', ' ').title()} Service**\n\n"
     response += f"{service_info['description']}\n\n"
     
     # Check what user is asking about (but NOT if asking for names/list)
@@ -710,7 +710,7 @@ def get_service_info(service_type, query_lower):
         
         response += "\n**Professional Tools:**\n"
         for tool in tech_info.get('tools', []):
-            response += f"🔨 {tool}\n"
+            response += f"• {tool}\n"
         
         response += f"\n **{tech_info.get('verification', 'All technicians are verified and insured')}**"
     
@@ -742,7 +742,7 @@ def get_service_info(service_type, query_lower):
         for issue in service_info['common_issues'][:4]:
             response += f"• {issue}\n"
         response += f"\n **Cost:** {service_info['avg_cost']}\n"
-        response += f"⏱ **Duration:** {service_info['avg_time']}\n\n"
+        response += f"**Duration:** {service_info['avg_time']}\n\n"
         response += "Would you like to book this service?"
     
     return response
@@ -793,7 +793,7 @@ def format_technician_list(technicians, service_type):
     if not technicians or len(technicians) == 0:
         return f"I don't have specific technician details available right now, but we have qualified {service_type} professionals ready to help you!\n\nWould you like to book a service? Our system will match you with the best available technician in your area."
     
-    response = f" **Available {service_type.title()} Technicians:**\n\n"
+    response = f"**Available {service_type.title()} Technicians:**\n\n"
     
     for i, tech in enumerate(technicians[:5], 1):  # Show max 5 technicians
         # Get user info (backend structure: tech.user.name)
@@ -815,7 +815,7 @@ def format_technician_list(technicians, service_type):
         
         # Show phone if available
         if phone:
-            response += f"   📞 Phone: {phone}\n"
+            response += f"   Phone: {phone}\n"
         
         # Show distance if calculated
         if distance and distance < 999:
@@ -827,7 +827,7 @@ def format_technician_list(technicians, service_type):
         # Show skills
         if skills and len(skills) > 0:
             skills_str = ', '.join(skills[:3])  # Show first 3 skills
-            response += f"   🔧 Skills: {skills_str}\n"
+            response += f"   Skills: {skills_str}\n"
         
         response += "\n"
     
@@ -871,12 +871,12 @@ def initiate_booking(service_type, user_id):
     context['booking_in_progress'] = True
     context['booking_service'] = service_type
     
-    response = f" **Starting {service_type.replace('_', ' ').title()} Booking**\n\n"
+    response = f"**Starting {service_type.replace('_', ' ').title()} Booking**\n\n"
     response += "To complete your booking, I need:\n"
-    response += "1.  Service type: " + service_type.replace('_', ' ').title() + "\n"
-    response += "2.  Your location\n"
-    response += "3.  Urgency level (Regular/Emergency)\n"
-    response += "4.  Brief description of the issue\n\n"
+    response += "1. Service type: " + service_type.replace('_', ' ').title() + "\n"
+    response += "2. Your location\n"
+    response += "3. Urgency level (Regular/Emergency)\n"
+    response += "4. Brief description of the issue\n\n"
     response += "Please open the app and tap 'Request Service' to complete your booking, or tell me if this is an emergency!"
     
     return response
@@ -895,11 +895,11 @@ def check_payment_status(booking_id):
             method = payment.get('method', 'N/A')
             
             if status == 'completed':
-                return f" Payment completed via {method.upper()}"
+                return f"Payment completed via {method.upper()}"
             elif status == 'pending':
-                return f" Payment pending - Method: {method.upper()}"
+                return f"Payment pending - Method: {method.upper()}"
             else:
-                return f" Payment status: {status}"
+                return f"Payment status: {status}"
         return "Unable to fetch payment status"
     except:
         return "Unable to connect to server"
@@ -944,13 +944,13 @@ def generate_smart_response(message, service_type, intent, user_id='anonymous'):
     for q_type, patterns in question_patterns.items():
         if any(pattern in message_lower for pattern in patterns):
             if q_type == 'how' and 'much' in message_lower:
-                return " **Pricing Information:**\n\nOur rates vary by service type:\n\n• Plumbing: LKR 2,000 - 8,000\n• Electrical: LKR 1,500 - 10,000\n• Carpentry: LKR 3,000 - 15,000\n• Painting: LKR 5,000 - 25,000\n• Cleaning: LKR 3,000 - 12,000\n• Appliance Repair: LKR 2,000 - 10,000\n• HVAC: LKR 3,000 - 15,000\n• Locksmith: LKR 2,000 - 8,000\n\nFinal cost depends on:\n✓ Complexity of work\n✓ Materials required\n✓ Time needed\n✓ Emergency surcharge (if applicable)\n\nYou'll get a detailed estimate before confirming!"
+                return "**Pricing Information:**\n\nOur rates vary by service type:\n\n• Plumbing: LKR 2,000 - 8,000\n• Electrical: LKR 1,500 - 10,000\n• Carpentry: LKR 3,000 - 15,000\n• Painting: LKR 5,000 - 25,000\n• Cleaning: LKR 3,000 - 12,000\n• Appliance Repair: LKR 2,000 - 10,000\n• HVAC: LKR 3,000 - 15,000\n• Locksmith: LKR 2,000 - 8,000\n\nFinal cost depends on:\n• Complexity of work\n• Materials required\n• Time needed\n• Emergency surcharge (if applicable)\n\nYou'll get a detailed estimate before confirming!"
             
             elif q_type == 'when':
-                return " **Service Hours:**\n\n• **Regular Services:** 8 AM - 8 PM (7 days a week)\n• **Emergency Services:** 24/7 available\n\n⚡ Emergency services have a 50% surcharge but we'll be there ASAP!\n\nTypical response times:\n• Regular: Within 2-4 hours\n• Emergency: Within 30-60 minutes"
+                return "**Service Hours:**\n\n• **Regular Services:** 8 AM - 8 PM (7 days a week)\n• **Emergency Services:** 24/7 available\n\nNote: Emergency services have a 50% surcharge but we'll be there ASAP!\n\nTypical response times:\n• Regular: Within 2-4 hours\n• Emergency: Within 30-60 minutes"
             
             elif q_type == 'where':
-                return " **Service Areas:**\n\nWe currently serve:\n• Colombo and all suburbs\n• Gampaha District\n• Kandy City\n• Galle and surrounding areas\n\n🚀 Expanding to more cities soon!\n\nNot sure if we cover your area? Share your location and I'll check for you!"
+                return "**Service Areas:**\n\nWe currently serve:\n• Colombo and all suburbs\n• Gampaha District\n• Kandy City\n• Galle and surrounding areas\n\nExpanding to more cities soon!\n\nNot sure if we cover your area? Share your location and I'll check for you!"
     
     # Check for specific keywords
     if any(word in message_lower for word in ['leak', 'water', 'pipe', 'tap', 'drain']):
@@ -1050,7 +1050,7 @@ def chat():
         # Handle payment queries
         if intent == 'payment' and booking_id:
             payment_status = check_payment_status(booking_id)
-            bot_response = f" **Payment Status for Booking {booking_id[:8]}...**\n\n{payment_status}\n\nNeed help with anything else?"
+            bot_response = f"**Payment Status for Booking {booking_id[:8]}...**\n\n{payment_status}\n\nNeed help with anything else?"
         # Handle booking intent with service type
         elif intent == 'booking' and service_type:
             bot_response = initiate_booking(service_type, user_id)
@@ -1071,7 +1071,7 @@ def chat():
                 
                 # Add context-aware suggestions
                 if context['last_service'] and intent == 'default':
-                    bot_response += f"\n\n I noticed you were asking about {context['last_service']}. Would you like to book this service?"
+                    bot_response += f"\n\nI noticed you were asking about {context['last_service']}. Would you like to book this service?"
         
         # Update conversation context
         update_conversation_context(user_id, intent, service_type, user_message)
